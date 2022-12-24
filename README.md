@@ -1,0 +1,1 @@
+# jwellery_store_api
