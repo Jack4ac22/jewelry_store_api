@@ -29,3 +29,8 @@ def request_password_reset(request: user_schemas.RequestPassword, db: Session = 
 @router.post("/reset_password/{token}", response_model=user_schemas.UserDisplay)
 def reset_password(token: str, request: user_schemas.PasswordReset, db: Session = Depends(get_db)):
     return db_user.reset_password_for_user(token, request, db)
+
+
+# TODO:request deactivation
+
+# TODO: deactivate the account

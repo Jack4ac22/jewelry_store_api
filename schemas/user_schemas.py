@@ -17,11 +17,14 @@ class RequestPassword(BaseModel):
 
 
 class PasswordReset(BaseModel):
-    new_password: str = "New_Password"
+    new_password: str
 
 
 class UserDisplay(BaseModel):
     id: int
+    first_name: str = "John"
+    last_name: str = "Doe"
+    email: EmailStr = "j_doe@gmail.com"
     created_at: datetime
     updated_at: Union[datetime, None]
     activated: bool

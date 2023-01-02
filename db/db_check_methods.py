@@ -25,3 +25,8 @@ def check_user_by_email(email_address: str, db: Session):
             detail=f"No corresponding User were found with the given email address."
         )
     return user
+
+def check_email_usage(email_address:str, db:Session):
+    user = db.query(DbUser).filter(DbUser.email == email_address).first()
+    if user:
+        raise HTTPException( status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"The email: '{email_address}' is already used.")

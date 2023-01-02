@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     expiration_minutes: int
+    email_address: str
+    email_password: str
+    host_name: str
 
     class Config:
         env_file = ".env"
