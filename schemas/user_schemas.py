@@ -6,20 +6,26 @@ from schemas import personalized_enums
 
 
 class UserBase(BaseModel):
-    username: str = "username"
-    password: str = "password"
-    secret_password: str = "secret_password"
-    email: EmailStr
+    first_name: str = "John"
+    last_name: str = "Doe"
+    email: EmailStr = "j_doe@gmail.com"
+    password: str = "die_hard"
+
+
+class RequestPassword(BaseModel):
+    email: EmailStr = "j_doe@gmail.com"
+
+
+class PasswordReset(BaseModel):
+    new_password: str = "New_Password"
 
 
 class UserDisplay(BaseModel):
     id: int
-    username: str = "username"
-    email: EmailStr
-    activated: bool
     created_at: datetime
-    updated_at: datetime
-    deleted: bool
+    updated_at: Union[datetime, None]
+    activated: bool
+    verified: bool
 
     class Config:
         orm_mode = True

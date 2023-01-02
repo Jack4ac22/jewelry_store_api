@@ -13,16 +13,17 @@ Base = declarative_base()
 class DbUser(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, nullable=False, index=True, unique=True)
-    password = Column(String, nullable=False)
-    secret_password = Column(String, nullable=False)
+    first_name = Column(String, nullable=False, index=True)
+    last_name = Column(String, nullable=False, index=True)
     email = Column(String, nullable=False, index=True, unique=True)
-    activated = Column(Boolean, nullable=False, server_default="false")
+    password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=func.current_timestamp(), nullable=True)
-    deleted = Column(Boolean, nullable=False, server_default="false")
+    activated = Column(Boolean, nullable=False, server_default="false")
+    verified = Column(Boolean, nullable=False, server_default="false")
+    token = Column(String, nullable=True)
 
 
 # class DbPerson(Base):
