@@ -1,3 +1,4 @@
+import time
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -15,13 +16,17 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth")
 
 
 def generate_token(user_id: int, email: str, activated: bool):
-    payload = {"user_id": user_id, "email": email, "activated": activated}
+    expiration = time.time() + settings.expiration_minutes * 60
+    payload = {"user_id": user_id, "email": email,
+               "activated": activated, "expiration": expiration}
     encoded_jwt = jwt.encode(payload, SERVER_KEY, algorithm=ALGORITHM)
     return Token(access_token=encoded_jwt, token_type="bearer")
 
 
-def generate_validation_token(user_id: int, email: str, random_text: str):
-    payload = {"user_id": user_id, "email": email, "token": random_text}
+def generate_validation_token(user_id: int, email: str, random_text: str, minutes: int = 43200):
+    expiration = time.time() + minutes * 60
+    payload = {"user_id": user_id, "email": email,
+               "token": random_text, "expiration": expiration}
     encoded_jwt = jwt.encode(payload, SERVER_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -33,7 +38,13 @@ def decode_token_id(provided_token: str = Depends(oauth2_scheme)):
         payload = jwt.decode(provided_token, SERVER_KEY,
                              algorithms=[ALGORITHM])
         decoded_id: str = payload.get("user_id")
-        decoded_email: str = payload.get("email")
+        decoded_time: str = payload.get("expiration")
+        if decoded_time < time.time():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Th token is expired.",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -77,6 +88,13 @@ def decode_token_email_validation(provided_token: str = Depends(oauth2_scheme)):
         payload = jwt.decode(provided_token, SERVER_KEY,
                              algorithms=[ALGORITHM])
         decoded_email: str = payload.get("email")
+        decoded_time: str = payload.get("expiration")
+        if decoded_time < time.time():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="The Token was expired",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
