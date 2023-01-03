@@ -24,6 +24,24 @@ class DbUser(Base):
     activated = Column(Boolean, nullable=False, server_default="false")
     verified = Column(Boolean, nullable=False, server_default="false")
     token = Column(String, nullable=True)
+    addresses = relationship("DbAddress", back_populates="user")
+
+
+class DbAddress(Base):
+    __tablename__ = 'address'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    address_description = Column(String, nullable=True)
+    country = Column(String, nullable=False)
+    state = Column(String, nullable=False)
+    county = Column(String, nullable=False)
+    street_name = Column(String, nullable=False)
+    number = Column(String, nullable=False)
+    extra_details = Column(String, nullable=True)
+    active_address = Column(Boolean, server_default="false")
+
+    user = relationship("DbUser", back_populates="addresses")
 
 
 # class DbPerson(Base):
