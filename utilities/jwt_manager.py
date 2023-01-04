@@ -72,14 +72,14 @@ def decode_token_status(provided_token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(provided_token, SERVER_KEY,
                              algorithms=[ALGORITHM])
-        decoded_email: str = payload.get("activated")
+        decoded_status: str = payload.get("activated")
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"}
         )
-    return decoded_email
+    return decoded_status
 
 
 ##### decode email for validation #####

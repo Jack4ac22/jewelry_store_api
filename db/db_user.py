@@ -14,7 +14,7 @@ def create_user(request: user_schemas.UserBase, db: Session):
     hashed_password = hash_manager.hash_pass(request.password)
     generated_token = jwt_manager.generate_validation_token(
         time(), request.email, "ActivateMyAccount", 360)
-    print(generated_token)
+    # print(generated_token)
     new_user = DbUser(
         first_name=request.first_name,
         last_name=request.last_name,

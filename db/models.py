@@ -22,8 +22,10 @@ class DbUser(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=func.current_timestamp(), nullable=True)
     activated = Column(Boolean, nullable=False, server_default="false")
+    admin = Column(Boolean, nullable=False, server_default="false")
     verified = Column(Boolean, nullable=False, server_default="false")
     token = Column(String, nullable=True)
+
     addresses = relationship("DbAddress", back_populates="user")
 
 
@@ -35,11 +37,15 @@ class DbAddress(Base):
     address_description = Column(String, nullable=True)
     country = Column(String, nullable=False)
     state = Column(String, nullable=False)
-    county = Column(String, nullable=False)
+    county = Column(String, nullable=True)
     street_name = Column(String, nullable=False)
     number = Column(String, nullable=False)
     extra_details = Column(String, nullable=True)
     active_address = Column(Boolean, server_default="false")
+    created_at = Column(TIMESTAMP(timezone=True),
+                        server_default=text('now()'), nullable=False)
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        onupdate=func.current_timestamp(), nullable=True)
 
     user = relationship("DbUser", back_populates="addresses")
 
