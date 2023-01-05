@@ -1,5 +1,5 @@
 from sqlalchemy.orm.session import Session
-from .models import DbUser, DbAddress
+from .models import DbUser, DbAddress, DbProduct
 from fastapi import HTTPException, status
 
 ############################
@@ -34,8 +34,17 @@ def check_email_usage(email_address: str, db: Session):
                             detail=f"The email: '{email_address}' is already used.")
 
 
-def check_admin_status(id: int, db: Session):
-    return check_user_id(id, db).first().admin
+def check_admin_status(user_id: int, db: Session):
+    return check_user_id(user_id, db).first().admin
+
+
+def admin_only_method(user_id: int, db: Session):
+    if not check_admin_status(user_id, db):
+        raise HTTPException(
+            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+            detail="This method is not allowed."
+        )
+    return True
 
 
 ###############################
@@ -51,3 +60,18 @@ def check_address_id(id: int, db: Session):
             detail=f"No corresponding address was found with ID: {id}, please verify the ID and try again."
         )
     return targeted_address
+
+
+###############################
+## product's checking methods##
+###############################
+
+
+def check_product_id(id: int, db: Session):
+    targeted_product = db.query(DbProduct).filter(DbProduct.id == id)
+    if not targeted_product.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No corresponding product was found with ID: {id}, please verify the ID and try again."
+        )
+    return targeted_product

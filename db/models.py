@@ -27,6 +27,7 @@ class DbUser(Base):
     token = Column(String, nullable=True)
 
     addresses = relationship("DbAddress", back_populates="user")
+    products = relationship("DbProduct", back_populates="user")
 
 
 class DbAddress(Base):
@@ -50,25 +51,23 @@ class DbAddress(Base):
     user = relationship("DbUser", back_populates="addresses")
 
 
-# class DbPerson(Base):
-#     __tablename__ = 'person'
-#     id = Column(Integer, primary_key=True, index=True)
-#     first_name = Column(String, nullable=False)
-#     last_name = Column(String, nullable=False)
-#     gender = Column(Enum(personalized_enums.Genders_person), nullable=False)
-#     email = Column(String, nullable=False, unique=True, index=True)
-#     birthday = Column(Date, nullable=True, server_default="1900-01-31")
-#     created_at = Column(TIMESTAMP(timezone=True),
-#                         server_default=text('now()'), nullable=False)
-#     updated_at = Column(TIMESTAMP(timezone=True),
-#                         onupdate=func.current_timestamp(), nullable=True)
-#     added_by = Column(Integer, ForeignKey(
-#         "user.id", ondelete="CASCADE"), nullable=False)
-#     user = relationship("DbUser")
-#     phones = relationship("DbPhone", back_populates='person')
-#     comments = relationship("DbComment", back_populates='person')
-#     tasks = relationship("DbTask", back_populates='person')
-#     job_titles = relationship("DbPersonJob", back_populates="person")
+class DbProduct(Base):
+    __tablename__ = 'product'
+    id = Column(Integer, primary_key=True, index=True)
+    display_id = Column(String, index=True, unique=True)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    set_price = Column(Float, nullable=True)
+    storage = Column(Integer, nullable=False)
+    featured = Column(Boolean, nullable=False, server_default="false")
+    hidden = Column(Boolean, nullable=False, server_default="false")
+    created_at = Column(TIMESTAMP(timezone=True),
+                        server_default=text('now()'), nullable=False)
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        onupdate=func.current_timestamp(), nullable=True)
+    added_by = Column(Integer, ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    user = relationship("DbUser")
 
 
 # class DbPhone(Base):

@@ -40,7 +40,8 @@ def get_single_by_id(id: int, user_id: int, db: Session):
 
 def update(user_id: int, address_id: int, request: address_schemas.AddressBase, db: Session):
     targeted_address = db_check_methods.check_address_id(address_id, db)
-    if not db_check_methods.check_admin_status or targeted_address.first().user_id != user_id:
+    db_check_methods.admin_only_method(user_id, db)
+    if targeted_address.first().user_id != user_id:
         raise HTTPException(
             status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
             detail="This method is not allowed."

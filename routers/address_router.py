@@ -1,8 +1,8 @@
-from sqlalchemy.orm.session import Session
-from fastapi import APIRouter, Depends, status
-from db.database import get_db
-from schemas import address_schemas, user_schemas, other_schemas
 from db import db_address, db_check_methods
+from db.database import get_db
+from fastapi import APIRouter, Depends, status
+from schemas import address_schemas, user_schemas, other_schemas
+from sqlalchemy.orm.session import Session
 from typing import Union, List
 from utilities import jwt_manager
 

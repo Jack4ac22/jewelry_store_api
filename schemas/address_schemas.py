@@ -1,8 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
 from typing import Optional, Union
-import enum
-from schemas import personalized_enums
 
 
 class UserInAddress(BaseModel):
